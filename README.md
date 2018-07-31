@@ -1,21 +1,34 @@
-# gshop
+项目结构分析
+gshop
+	|-- build : webpack相关的配置文件夹(基本不需要修改)
+	|-- config: webpack相关的配置文件夹(基本不需要修改)
+		|-- index.js: 指定的后台服务的端口号和静态资源文件夹
+	|-- node_modules
+	|-- src : 源码文件夹
+		|-- main.js: 应用入口js
+	|-- static: 静态资源文件夹
+	|-- .babelrc: babel的配置文件
+	|-- .editorconfig: 通过编辑器的编码/格式进行一定的配置
+	|-- .eslintignore: eslint检查忽略的配置
+	|-- .eslintrc.js: eslint检查的配置
+	|-- .gitignore: git版本管制忽略的配置
+	|-- index.html: 主页面文件
+	|-- package.json: 应用包配置文件 
+	|-- README.md: 应用描述说明的readme文件
 
-> A Vue.js project
-
-## Build Setup
-
-``` bash
-# install dependencies
-npm install
-
-# serve with hot reload at localhost:8080
-npm run dev
-
-# build for production with minification
-npm run build
-
-# build for production and view the bundle analyzer report
-npm run build --report
-```
-
-For a detailed explanation on how things work, check out the [guide](http://vuejs-templates.github.io/webpack/) and [docs for vue-loader](http://vuejs.github.io/vue-loader).
+分析应用的整体vue组件结构
+src
+	|-- components------------非路由组件文件夹
+		|-- FooterGuide---------------底部组件文件夹
+			|-- FooterGuide.vue--------底部组件vue
+      |-- pages-----------------路由组件文件夹
+		|-- Msite---------------首页组件文件夹
+			|-- Msite.vue--------首页组件vue
+		|-- Search----------------搜索组件文件夹
+			|-- Search.vue---------搜索组件vue
+		|-- Order--------------订单组件文件夹
+			|-- Order.vue-------订单组件vue
+		|-- Profile--------------个人组件文件夹
+			|-- Profile.vue-------个人组件vue
+	|-- App.vue---------------应用根组件vue
+	|-- main.js---------------应用入口js
