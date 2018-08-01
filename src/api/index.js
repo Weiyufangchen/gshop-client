@@ -13,6 +13,7 @@ export const reqShops = (latitude, longitude) => ajax('/api/shops', {latitude, l
 // [4、根据经纬度和关键字搜索商铺列表](#4根据经纬度和关键字搜索商铺列表)<br/>
 export const reqShopLists = (keyword, geohash) => ajax('/api/search_shops', {keyword, geohash})
 // [5、获取一次性验证码](#5获取一次性验证码)<br/>
+
 // [6、用户名密码登陆](#6用户名密码登陆)<br/>
 // [7、发送短信验证码](#7发送短信验证码)<br/>
 // [8、手机号验证码登陆](#8手机号验证码登陆)<br/>

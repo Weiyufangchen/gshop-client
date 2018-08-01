@@ -22,7 +22,7 @@
               <button
                 :disabled="computeTime>0"
                 class="get_verification"
-                :class="{right_phone: isRightPhone}"
+                :class="{right_phone: isRightPhone  && (computeTime === 0)}"
                 @click.prevent="sendCode"
               >{{computeTime ? `已发送(${computeTime})s` : '获取验证码'}}</button>
             </section>
@@ -37,13 +37,17 @@
           <div :class="{on: !loginWay}">
             <section>
               <section class="login_message">
-                <input type="tel" maxlength="11" placeholder="手机/邮箱/用户名">
+                <input type="tel" maxlength="11" placeholder="手机/邮箱/用户名" v-model="name">
               </section>
               <section class="login_verification">
-                <input type="tel" maxlength="8" placeholder="密码">
-                <div class="switch_button off">
-                  <div class="switch_circle"></div>
-                  <span class="switch_text">...</span>
+                <input :type="isShowPwd ? 'text' : 'password'" maxlength="8" placeholder="密码" v-model="pwd">
+                <div
+                  class="switch_button"
+                  :class="isShowPwd? 'on':'off'"
+                  @click="isShowPwd = !isShowPwd"
+                >
+                  <div class="switch_circle" :class="{right: isShowPwd}"></div>
+                  <span class="switch_text">{{isShowPwd ? 'abc' : ''}}</span>
                 </div>
               </section>
               <section class="login_message">
@@ -69,7 +73,10 @@
       return {
         loginWay: true,  // 默认true，true表示短信登录，false代表密码登录
         phone: '',  // 输入框手机号（11位的1开头数字字符串为正确值，定义正则判断）
-        computeTime: 0,  //倒计时时间
+        computeTime: 0,  // 倒计时时间
+        name: '', // 用户名
+        pwd: '', // 用户密码
+        isShowPwd: false,  // 默认false，false表示隐藏密码，true表示显示密码
       }
     },
     computed: {
@@ -79,6 +86,7 @@
     },
     methods: {
       sendCode (event) {
+        // 1. 倒计时功能
         // 点击发送之后，切换成已发送，并且不能点击，30s之后才能再次操作
         // disabled属性动态修改
       //  阻止默认发送的行为 @click.prevent
@@ -96,6 +104,9 @@
             event.target.className += ' right_phone'
           }
         }, 1000)
+
+      //  2. 发送ajax请求
+
       }
     }
 
@@ -204,6 +215,8 @@
                   background #fff
                   box-shadow 0 2px 4px 0 rgba(0,0,0,.1)
                   transition transform .3s
+                  &.right
+                    transform translateX(26px)
             .login_hint
               margin-top 12px
               color #999

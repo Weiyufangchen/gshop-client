@@ -17,6 +17,7 @@
             class="swiper-slide"
             v-for="(smallArr, index) in categorysArr"
             :key="index"
+            v-if="categorysArr.length"
           >
             <a
               href="javascript:"
@@ -29,6 +30,9 @@
               </div>
               <span>{{category.title}}</span>
             </a>
+          </div>
+          <div v-else>
+            <img src="./images/msite_back.svg" alt="back">
           </div>
         </div>
         <!-- Add Pagination -->
