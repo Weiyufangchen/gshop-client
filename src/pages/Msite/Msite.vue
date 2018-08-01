@@ -13,24 +13,15 @@
     <nav class="msite_nav border-1px">
       <div class="swiper-container">
         <div class="swiper-wrapper">
-          <div class="swiper-slide">
+          <div
+            class="swiper-slide"
+            v-for="(smallArr, index) in categorysArr"
+            :key="index"
+          >
             <a
               href="javascript:"
               class="link_to_food"
-              v-for="(category, index) in categorys.slice(0, 8)"
-              :key="index"
-            >
-              <div class="food_container">
-                <img :src="baseImgPath + category.image_url">
-              </div>
-              <span>{{category.title}}</span>
-            </a>
-          </div>
-          <div class="swiper-slide">
-            <a
-              href="javascript:"
-              class="link_to_food"
-              v-for="(category, index) in categorys.slice(8)"
+              v-for="(category, index) in smallArr"
               :key="index"
             >
               <div class="food_container">
@@ -62,32 +53,61 @@
 
   import HeaderTop from '../../components/HeaderTop/HeaderTop'
   import ShopList from '../../components/ShopList/ShopList'
-export default {
+
+  export default {
     data() {
       return {
         baseImgPath: 'https://fuss10.elemecdn.com'
       }
     },
     computed: {
-      ...mapState(['address', 'categorys'])
+      ...mapState(['address', 'categorys']),
+    //  将categorys拆分成二维数组categorysArr
+      categorysArr () {
+        const arr = []  // 存放smallArr数组
+        let smallArr = []  // 8个为一组，塞到arr中
+      //  遍历categorys
+        this.categorys.forEach(category => {
+          // 将空的或者每次更新的smallArr添加到arr中
+          if (smallArr.length === 0) {
+            arr.push(smallArr)
+          }
+          // 小数组放category，放满8个清空
+          smallArr.push(category)
+          if (smallArr.length === 8) {
+            smallArr = []
+          }
+        })
+        return arr
+      }
     },
-  mounted () {
-    //  请求后台获取shops
-    this.$store.dispatch('getShops')
-    this.$store.dispatch('getCategorys')
-    //  创建swiper实例对象，实现轮播
-    new Swiper('.swiper-container', { // 参数1：选择器，参数2：配置对象
-      pagination: { // 是否需要分页器
-        el: '.swiper-pagination',
-      },
-      loop: true
-    })
-  },
-  components: {
-    HeaderTop,
-    ShopList
+    mounted() {
+      // 请求后台获取shops
+      this.$store.dispatch('getShops')
+      // 请求后台获取categorys
+      this.$store.dispatch('getCategorys')
+    },
+    watch: {
+      categorys() {
+        // 调用vm.$nextTick(callback) 将回调延迟到下次 DOM 更新循环之后执行。在修改数据之后立即使用它，然后等待 DOM 更新。
+        // 用定时器，不知道数据什么时候全部拿到，不稳妥
+        this.$nextTick(() => {
+            //  创建swiper实例对象，实现轮播(必须要在拿到数据，更新页面之后，再轮播)
+            new Swiper('.swiper-container', { // 参数1：选择器，参数2：配置对象
+              pagination: { // 是否需要分页器
+                el: '.swiper-pagination',
+              },
+              loop: true
+            })
+          }
+        )
+      }
+    },
+    components: {
+      HeaderTop,
+      ShopList
+    }
   }
-}
 </script>
 
 <style lang="stylus" rel="stylesheet/stylus">
@@ -168,7 +188,7 @@ export default {
                 font-size 13px
                 color #666
         .swiper-pagination
-          >span.swiper-pagination-bullet-active
+          > span.swiper-pagination-bullet-active
             background #02a774
     .msite_shop_list
       top-border-1px(#e4e4e4)
