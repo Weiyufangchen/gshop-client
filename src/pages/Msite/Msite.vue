@@ -6,18 +6,17 @@
         <i class="iconfont icon-sousuo"></i>
       </router-link>
       <router-link slot="right" to="/login" class="header_login">
-        <span class="header_login_text">登录|注册</span>
+        <span class="header_login_text">{{user.name?user.name:'登录/注册'}}</span>
       </router-link>
     </HeaderTop>
     <!--首页导航-->
     <nav class="msite_nav border-1px">
-      <div class="swiper-container">
+      <div class="swiper-container" v-if="categorysArr.length">
         <div class="swiper-wrapper">
           <div
             class="swiper-slide"
             v-for="(smallArr, index) in categorysArr"
             :key="index"
-            v-if="categorysArr.length"
           >
             <a
               href="javascript:"
@@ -31,12 +30,12 @@
               <span>{{category.title}}</span>
             </a>
           </div>
-          <div v-else>
-            <img src="./images/msite_back.svg" alt="back">
-          </div>
         </div>
         <!-- Add Pagination -->
         <div class="swiper-pagination"></div>
+      </div>
+      <div v-else>
+        <img src="./images/msite_back.svg" alt="back">
       </div>
     </nav>
     <!--首页附近商家-->
@@ -65,7 +64,7 @@
       }
     },
     computed: {
-      ...mapState(['address', 'categorys']),
+      ...mapState(['address', 'categorys', 'user']),
     //  将categorys拆分成二维数组categorysArr
       categorysArr () {
         const arr = []  // 存放smallArr数组

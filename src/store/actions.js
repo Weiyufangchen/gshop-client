@@ -1,5 +1,14 @@
-import {RECEIVE_ADDRESS, RECEIVE_CATEGORYS, RECEIVE_SHOPS} from './mutation_type'
-import {reqAddress, reqCategorys, reqShops} from '../api'
+import {
+  RECEIVE_ADDRESS,
+  RECEIVE_CATEGORYS,
+  RECEIVE_SHOPS,
+  RECEIVE_USER
+} from './mutation_type'
+import {
+  reqAddress,
+  reqCategorys,
+  reqShops
+} from '../api'
 
 export default {
 //  异步获取当前地址信息
@@ -29,6 +38,10 @@ export default {
       const shops = result.data
       commit(RECEIVE_SHOPS, {shops})
     }
+  },
+//  同步保存用户信息
+  saveUser ({commit}, user) {
+    commit (RECEIVE_USER, {user})
   }
 }
 
