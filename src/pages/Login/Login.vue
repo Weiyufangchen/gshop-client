@@ -4,16 +4,27 @@
       <div class="login_header">
         <h2 class="login_logo">硅谷外卖</h2>
         <div class="login_header_title">
-          <a href="javascript:;" class="on">短信登录</a>
-          <a href="javascript:;">密码登录</a>
+          <a href="javascript:;"
+             :class="{on: loginWay}"
+             @click="loginWay=true"
+          >短信登录</a>
+          <a href="javascript:;"
+             :class="{on: !loginWay}"
+             @click="loginWay=false"
+          >密码登录</a>
         </div>
       </div>
       <div class="login_content">
         <form>
-          <div class="on">
+          <div :class="{on: loginWay}">
             <section class="login_message">
-              <input type="tel" maxlength="11" placeholder="手机号">
-              <button disabled="disabled" class="get_verification" >获取验证码</button>
+              <input type="tel" maxlength="11" placeholder="手机号" v-model="phone">
+              <button
+                :disabled="computeTime>0"
+                class="get_verification"
+                :class="{right_phone: isRightPhone}"
+                @click.prevent="sendCode"
+              >{{computeTime ? `已发送(${computeTime})s` : '获取验证码'}}</button>
             </section>
             <section class="login_verification">
               <input type="tel" maxlength="8" placeholder="验证码">
@@ -23,7 +34,7 @@
               <a href="javascript:;">《用户服务协议》</a>
             </section>
           </div>
-          <div>
+          <div :class="{on: !loginWay}">
             <section>
               <section class="login_message">
                 <input type="tel" maxlength="11" placeholder="手机/邮箱/用户名">
@@ -54,6 +65,39 @@
 
 <script>
   export default {
+    data () {
+      return {
+        loginWay: true,  // 默认true，true表示短信登录，false代表密码登录
+        phone: '',  // 输入框手机号（11位的1开头数字字符串为正确值，定义正则判断）
+        computeTime: 0,  //倒计时时间
+      }
+    },
+    computed: {
+      isRightPhone () {
+        return /^[1][3,4,5,7,8]\d{9}$/.test(this.phone)  // 定义正则，返回测试的布尔值
+      }
+    },
+    methods: {
+      sendCode (event) {
+        // 点击发送之后，切换成已发送，并且不能点击，30s之后才能再次操作
+        // disabled属性动态修改
+      //  阻止默认发送的行为 @click.prevent
+        this.computeTime = 10
+        // 移除类名right_phone
+        event.target.className = 'get_verification'
+        // 循环定时器
+        const intervalId = setInterval(() => {
+          this.computeTime--
+          if (this.computeTime <= 0) {
+            // 清除定时器
+            clearInterval(intervalId)
+            // 初始化操作
+            this.computeTime = 0
+            event.target.className += ' right_phone'
+          }
+        }, 1000)
+      }
+    }
 
   }
 </script>
@@ -119,6 +163,8 @@
                 color #ccc
                 font-size 14px
                 background transparent
+                &.right_phone
+                  color: #000
             .login_verification
               position relative
               margin-top 16px
