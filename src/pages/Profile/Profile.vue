@@ -91,7 +91,7 @@
 
     <section class="profile_my_order border-1px">
       <!-- 退出登陆 -->
-      <mt-button style="width: 100%;" type="danger" @click="loginOut">退出登陆</mt-button>
+      <mt-button style="width: 100%;" type="danger" @click="loginOut" v-show="user._id">退出登陆</mt-button>
     </section>
   </section>
 </template>

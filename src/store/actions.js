@@ -84,11 +84,13 @@ export default {
     }
   },
 //  异步获取goods
-  async getGoods({commit}) {
+  async getGoods({commit}, callback) {
     const result = await reqGoods()
     if (result.code === 0) {
       const goods = result.data
       commit(RECEIVE_GOODS, {goods})
+    //  如果组件中传递了接收消息的回调函数，数据更新后，调用回调函数通知调用的组件
+      callback && callback()
     }
   }
 }
