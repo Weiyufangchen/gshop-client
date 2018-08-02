@@ -3,14 +3,20 @@ import {
   RECEIVE_CATEGORYS,
   RECEIVE_SHOPS,
   RECEIVE_USER,
-  RESET_USER
+  RESET_USER,
+  RECEIVE_GOODS,
+  RECEIVE_INFO,
+  RECEIVE_RATINGS
 } from './mutation_type'
 import {
   reqAddress,
   reqCategorys,
   reqLogout,
   reqShops,
-  reqUserInfo
+  reqUserInfo,
+  reqInfo,
+  reqGoods,
+  reqRatings
 } from '../api'
 
 export default {
@@ -59,6 +65,30 @@ export default {
     const result = await reqLogout()
     if (result.code === 0) {
       commit(RESET_USER)
+    }
+  },
+//  异步获取商家信息info
+  async getInfo ({commit}) {
+    const result = await reqInfo()
+    if (result.code === 0) {
+      const info = result.data
+      commit(RECEIVE_INFO, {info})
+    }
+  },
+//  异步获取商家评分
+  async getRatings({commit}) {
+    const result = await reqRatings()
+    if (result.code === 0) {
+      const ratings = result.data
+      commit(RECEIVE_RATINGS, {ratings})
+    }
+  },
+//  异步获取goods
+  async getGoods({commit}) {
+    const result = await reqGoods()
+    if (result.code === 0) {
+      const goods = result.data
+      commit(RECEIVE_GOODS, {goods})
     }
   }
 }

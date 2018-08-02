@@ -25,4 +25,11 @@ export const reqUserInfo = () => ajax('/api/userinfo')
 // [10、用户登出](#10用户登出)<br/>
 export const reqLogout = () => ajax('/api/logout')
 
+// 11. 获取mock数据中商家商品分类goods
+export const reqGoods = () => ajax('/goods')
+// 12. 商家评价ratings
+export const reqRatings = () => ajax('/ratings')
+// 13. 商家信息info
+export const reqInfo = () => ajax('/info')
+
 

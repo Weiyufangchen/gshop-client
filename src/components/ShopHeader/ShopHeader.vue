@@ -1,6 +1,6 @@
 <template>
   <div>
-    ShopGoods组件
+    ShopHeader组件
   </div>
 </template>
 

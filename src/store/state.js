@@ -8,4 +8,7 @@ export default {
   categorys: [], // 分类数组
   shops: [],  //商家数组
   user: {}, // 用来保存用户信息
+  goods: [], // 商家的食物数组
+  info: {},  // 商家信息
+  ratings: [], // 评价
 }

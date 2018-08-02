@@ -1,10 +1,12 @@
 <template>
   <div class="shop_container">
     <ul class="shop_list" v-if="shops.length">
-      <li
+      <router-link
+        tag="li"
         class="shop_li border-1px"
         v-for="(shop, index) in shops"
         :key="index"
+        to="/shop"
       >
         <a>
           <div class="shop_left">
@@ -47,7 +49,7 @@
             </section>
           </div>
         </a>
-      </li>
+      </router-link>
     </ul>
     <ul v-else>
       <li v-for="i in 8" :key="i">
@@ -61,6 +63,7 @@
   import {mapState} from 'vuex'
 
   import Star from '../Star/Star'
+  import Shop from '../../pages/Shop/Shop'
   export default {
     data(){
       return {

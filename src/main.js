@@ -7,6 +7,9 @@ import App from './App'
 import router from './router'
 import store from './store'
 
+// 引入mock文件
+import './mock/mockServer'
+
 // Vue.config.productionTip = false
 // 注册全局组件标签
 Vue.component(Button.name, Button)
