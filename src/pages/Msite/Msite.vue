@@ -5,8 +5,8 @@
       <router-link slot="left" to="/search" class="header_search">
         <i class="iconfont icon-sousuo"></i>
       </router-link>
-      <router-link slot="right" to="/login" class="header_login">
-        <span class="header_login_text">{{user.name?user.name:'登录/注册'}}</span>
+      <router-link slot="right" :to="user._id?'/profile':'/login'" class="header_login">
+        <span class="header_login_text">{{user._id?'白菜':'登录/注册'}}</span>
       </router-link>
     </HeaderTop>
     <!--首页导航-->

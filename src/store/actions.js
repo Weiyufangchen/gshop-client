@@ -2,12 +2,15 @@ import {
   RECEIVE_ADDRESS,
   RECEIVE_CATEGORYS,
   RECEIVE_SHOPS,
-  RECEIVE_USER
+  RECEIVE_USER,
+  RESET_USER
 } from './mutation_type'
 import {
   reqAddress,
   reqCategorys,
-  reqShops
+  reqLogout,
+  reqShops,
+  reqUserInfo
 } from '../api'
 
 export default {
@@ -40,8 +43,23 @@ export default {
     }
   },
 //  同步保存用户信息
-  saveUser ({commit}, user) {
-    commit (RECEIVE_USER, {user})
+  saveUser({commit}, user) {
+    commit(RECEIVE_USER, {user})
+  },
+//  异步获取用户信息
+  async getUser({commit}) {
+    const result = await reqUserInfo()
+    if (result.code === 0) {
+      const user = result.data
+      commit(RECEIVE_USER, {user})
+    }
+  },
+//  异步退出登陆
+  async loginOut({commit}) {
+    const result = await reqLogout()
+    if (result.code === 0) {
+      commit(RESET_USER)
+    }
   }
 }
 

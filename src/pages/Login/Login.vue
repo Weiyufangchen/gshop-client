@@ -79,7 +79,7 @@
   export default {
     data() {
       return {
-        loginWay: true,  // 默认true，true表示短信登录，false代表密码登录
+        loginWay: false,  // 默认true，true表示短信登录，false代表密码登录
         phone: '',  // 输入框手机号（11位的1开头数字字符串为正确值，定义正则判断）
         code: '',  // 短信验证码
         computeTime: 0,  // 倒计时时间
@@ -158,7 +158,7 @@
         //  阻止默认发送的行为 @click.prevent
         this.computeTime = 30;
         // 移除类名right_phone
-        this.$refs.captcha.className = 'get_verification'
+        this.$refs.captcha && (this.$refs.captcha.className = 'get_verification')
         // 循环定时器
         const intervalId = setInterval(() => {
           this.computeTime--
@@ -167,7 +167,7 @@
             clearInterval(intervalId)
             // 初始化操作
             this.computeTime = 0
-            this.$refs.captcha.className += ' right_phone'
+            this.$refs.captcha && (this.$refs.captcha.className += ' right_phone')
           }
         }, 1000)
 
