@@ -78,7 +78,10 @@
       //  当前分类的下标
       currentIndex() {  // 根据上下滑动的y轴坐标来确定下标
         const {scrollY, tops} = this
-        return tops.findIndex((top, index) => scrollY >= top && scrollY < tops[index + 1])
+        // 将查找到的当前下标，用变量保存
+        let i = tops.findIndex((top, index) => scrollY >= top && scrollY < tops[index + 1])
+        this._initFollowScroll(i)  // 调用跟随滚动的函数，使两个滚动对象产生联动效果
+        return i
       }
     },
     methods: {
@@ -100,8 +103,9 @@
       // 滑动2种类型：手指触摸滑动  惯性/编码滑动
       _initScroll() {
         // 给左侧menu分类菜单创建scroll对象
-        new BScorll('.menu-wrapper', {
-          click: true  // better-scroll派发点击事件，插件禁用了原生dom事件，默认false，true表示派发事件
+        this.menuScroll = new BScorll('.menu-wrapper', {
+          click: true,  // better-scroll派发点击事件，插件禁用了原生dom事件，默认false，true表示派发事件
+          probeType: 1
         })
         // 给右侧foods食品列表创建scroll对象，挂载到this上，方便查找
         this.foodsScroll = new BScorll('.foods-wrapper', {
@@ -119,7 +123,7 @@
           this.scrollY = Math.abs(y)
         })
       },
-
+      // 给左侧单个li添加点击事件，传入当前元素的下标
       clickItem (index) {
       //  获取index对应的top
         const top = this.tops[index]
@@ -127,6 +131,12 @@
         this.scrollY = top
       //  右侧列表滚动到top处 scrollTo(x, y, time(ms), easing)
         this.foodsScroll.scrollTo(0, -top, 300)
+      },
+    //  给左侧ul添加跟随右侧的滚动
+      _initFollowScroll (index) {
+        let el = this.$refs.menuUl.children[index]
+        console.log(this, this.menuScroll)   // 调用这个函数前，需要判断menuScroll是否存在
+        this.menuScroll && this.menuScroll.scrollToElement(el, 300)
       }
     }
   }
