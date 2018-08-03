@@ -90,8 +90,8 @@ export default {
       const goods = result.data
       commit(RECEIVE_GOODS, {goods})
     //  如果组件中传递了接收消息的回调函数，数据更新后，调用回调函数通知调用的组件
+    //  相当于，数据更新后，可以给组件添加动画效果，在回调函数里面写
       callback && callback()
     }
   }
 }
-

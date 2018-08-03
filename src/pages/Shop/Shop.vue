@@ -28,6 +28,7 @@ replace属性：
 
     mounted (){
       this.$store.dispatch('getInfo')
+      this.$store.dispatch('getRatings')
     },
     components: {
       ShopHeader
