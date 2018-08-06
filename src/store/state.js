@@ -11,4 +11,5 @@ export default {
   goods: [], // 商家的食物数组
   info: {},  // 商家信息
   ratings: [], // 评价
+  cartFoods: []  // 购物车数据,一个goods中选定的foods中一些food数组
 }

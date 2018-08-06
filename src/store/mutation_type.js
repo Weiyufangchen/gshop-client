@@ -6,3 +6,5 @@ export const RESET_USER = 'reset_user'  // 重置用户信息
 export const RECEIVE_INFO = 'receive_info'  // 获取mock数据中商家info
 export const RECEIVE_GOODS = 'receive_goods'  // 获取mock中商家的食品分类
 export const RECEIVE_RATINGS = 'receive_ratings'  // 获取商家的评分
+export const INCREMENT_FOOD_COUNT = 'increment_food_count'
+export const DECREMENT_FOOD_COUNT = 'decrement_food_count'

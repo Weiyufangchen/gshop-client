@@ -18,11 +18,14 @@
         </ul>
       </div>
       <div class="foods-wrapper">
-        <ul ref="foodsUL">
+        <ul ref="foodsUl">
           <li class="food-list-hook" v-for="(good, index) in goods" :key="index">
             <h1 class="title">{{good.name}}</h1>
             <ul>
-              <li class="food-item bottom-border-1px" v-for="(food, index) in good.foods" :key="index">
+              <li class="food-item bottom-border-1px"
+                  v-for="(food, index) in good.foods" :key="index"
+                  @click="showFood(food)"
+              >
                 <div class="icon">
                   <img width="57" height="57"
                        :src="food.icon">
@@ -38,7 +41,7 @@
                     <span class="old" v-show="food.oldPrice">￥{{food.oldPrice}}</span>
                   </div>
                   <div class="cartcontrol-wrapper">
-                    CartControl组件
+                    <CartControl :food="food"/>
                   </div>
                 </div>
               </li>
@@ -46,19 +49,25 @@
           </li>
         </ul>
       </div>
+      <ShopCart/>
     </div>
+    <Food :food="food" ref="food"/>
   </div>
 </template>
 
 <script>
   import BScorll from 'better-scroll'
   import {mapState} from 'vuex'
+  import CartControl from '../../../components/CartControl/CartControl'
+  import Food from '../../../components/Food/Food'
+  import ShopCart from '../../../components/ShopCart/ShopCart'
 
   export default {
     data() {
       return {
         scrollY: 0,  // 右侧滚动的y坐标
-        tops: []  // 右侧滚动的累加top，也就是滚动的总高度
+        tops: [],  // 右侧滚动的累加top，也就是滚动的总高度
+        food: {}   // 显示当前food
       }
     },
     mounted() {
@@ -79,7 +88,7 @@
       currentIndex() {  // 根据上下滑动的y轴坐标来确定下标
         const {scrollY, tops} = this
         // 将查找到的当前下标，用变量保存
-        let i = tops.findIndex((top, index) => scrollY >= top && scrollY < tops[index + 1])
+        const i = tops.findIndex((top, index) => scrollY >= top && scrollY < tops[index + 1])
         this._initFollowScroll(i)  // 调用跟随滚动的函数，使两个滚动对象产生联动效果
         return i
       }
@@ -90,13 +99,15 @@
         const tops = []
         let top = 0
         tops.push(top)  // 初始加入tops，为0
-        // 遍历li
-        const lis = this.$refs.foodsUL.getElementsByClassName('food-list-hook')  // 类数组
-        // 也可以this.$refs.foodsUL.children(所有子元素)，childNodes（所有子节点，包括换行符）
-        Array.prototype.slice.call(lis).forEach(li => {  // 真数组
-          top += li.clientHeight   // 累加li的高度
-          tops.push(top)
-        })
+        // 遍历li 先判断ul是否存在
+        if (this.$refs.foodsUl) {
+          const lis = this.$refs.foodsUl.getElementsByClassName('food-list-hook');  // 类数组
+          // 也可以this.$refs.foodsUL.children(所有子元素)，childNodes（所有子节点，包括换行符）
+          Array.prototype.slice.call(lis).forEach(li => {  // 真数组
+            top += li.clientHeight   // 累加li的高度
+            tops.push(top)
+          })
+        }
       //  更新状态
         this.tops = tops
       },
@@ -132,25 +143,28 @@
       //  右侧列表滚动到top处 scrollTo(x, y, time(ms), easing)
         this.foodsScroll.scrollTo(0, -top, 300)
       },
-    //  给左侧ul添加跟随右侧的滚动
+    //  给左侧ul添加跟随右侧的滚动，实现联动滚动效果
       _initFollowScroll (index) {
-        let el = this.$refs.menuUl.children[index]
-        console.log(this, this.menuScroll)   // 调用这个函数前，需要判断menuScroll是否存在
-        this.menuScroll && this.menuScroll.scrollToElement(el, 300)
+        if (this.menuScroll) {
+          // 找到左侧列表当前的li菜单
+          let li = this.$refs.menuUl.children[index];
+          // console.log(this, this.menuScroll)   // 调用这个函数前，需要判断menuScroll是否存在
+
+          this.menuScroll.scrollToElement(li, 300)
+        }
+      },
+    //  点击食物，显示食物大图
+      showFood (food) {
+        this.food = food  // 更新data中food状态
+        this.$refs.food.toggleShow()
       }
+    },
+    components: {
+      CartControl,
+      Food,
+      ShopCart
     }
   }
-  /*
-  let tempY = 0, direction = 1  //  定义一个变量保存y，通过2次y的比较判断上下的滑动方向,direction表示方向,1表示向上
-
-  // 判断相邻两次滑动的Y值
-  (y - tempY) > 0 ? direction = 1 : direction = -1
-  this.scrollY = tempY = Math.abs(y)  // y是负值
-
-  if (this.$refs.menuList[index]) {
-    this.$refs.menuUl.style.transform = 'translateY(' + (139 * direction) + 'px)'
-  }
-   */
 </script>
 
 <style lang="stylus" rel="stylesheet/stylus">

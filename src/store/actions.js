@@ -6,7 +6,9 @@ import {
   RESET_USER,
   RECEIVE_GOODS,
   RECEIVE_INFO,
-  RECEIVE_RATINGS
+  RECEIVE_RATINGS,
+  INCREMENT_FOOD_COUNT,
+  DECREMENT_FOOD_COUNT
 } from './mutation_type'
 import {
   reqAddress,
@@ -93,5 +95,11 @@ export default {
     //  相当于，数据更新后，可以给组件添加动画效果，在回调函数里面写
       callback && callback()
     }
+  },
+  /* 更新goods中某一个food的数量 */
+  updateFoodCount({commit, state}, {food, isIncrement}) {
+
+  //  根据isIncrement值判断foodCount是否加1
+    isIncrement ? commit(INCREMENT_FOOD_COUNT, {food}) : commit(DECREMENT_FOOD_COUNT, {food})
   }
 }
