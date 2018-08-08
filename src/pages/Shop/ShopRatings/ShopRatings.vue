@@ -3,48 +3,54 @@
     <div class="ratings-content">
       <div class="overview">
         <div class="overview-left">
-          <h1 class="score">{{}}</h1>
+          <h1 class="score">{{info.score}}</h1>
           <div class="title">综合评分</div>
           <div class="rank">高于周边商家90%</div>
         </div>
         <div class="overview-right">
           <div class="score-wrapper">
             <span class="title">服务态度</span>
-            <div>Star组件</div>
-            <span class="score">4.4</span>
+            <Star :score="info.foodScore" :size="36"/>
+            <span class="score">{{info.serviceScore}}</span>
           </div>
           <div class="score-wrapper">
             <span class="title">商品评分</span>
-            <div>Star组件</div>
-            <span class="score">4.6</span></div>
+            <Star :score="info.foodScore" :size="36"/>
+            <span class="score">{{info.foodScore}}</span></div>
           <div class="delivery-wrapper">
             <span class="title">送达时间</span>
-            <span class="delivery">30分钟</span>
+            <span class="delivery">{{info.deliveryTime}}分钟</span>
           </div>
         </div>
       </div>
+      <!--分割层组件-->
+      <Split/>
 
-      <div class="split"></div>
-
-      <div>RatingSelect组件</div>
+      <RatingFilter
+        :selectRateType="selectRateType"
+        :onlyContent="onlyContent"
+        @setSelectRateType="setSelectRateType"
+        @switchOnlyContent="switchOnlyContent"
+      />
 
       <div class="rating-wrapper">
         <ul>
-          <li class="rating-item">
+          <li class="rating-item" v-for="rating in filterRatings">
             <div class="avatar">
-              <img width="28" height="28" src="http://static.galileo.xiaojukeji.com/static/tms/default_header.png">
+              <img width="28" height="28" :src="rating.avatar">
             </div>
             <div class="content">
-              <h1 class="name">xxx</h1>
+              <h1 class="name">{{rating.username}}</h1>
               <div class="star-wrapper">
-                <div>Star组件</div>
-                <span class="delivery">30</span>
+                <Star :score="rating.score" :size="24"/>
+                <span class="delivery">{{rating.deliveryTime}}</span>
               </div>
-              <p class="text">还可以</p>
+              <p class="text">{{rating.text}}</p>
               <div class="recommend">
-                <span class="iconfont icon-thumb_up"></span>
+                <span class="iconfont" :class="rating.rateType===0 ? 'icon-thumb_up' : 'icon-thumb_down'"></span>
+                <span class="item" v-for="item in rating.recommend">{{item}}</span>
               </div>
-              <div class="time">2016-12-11 12:02:13</div>
+              <div class="time">{{rating.rateTime | date-format}}</div>
             </div>
           </li>
         </ul>
@@ -54,17 +60,70 @@
 </template>
 
 <script>
+  import BScroll from 'better-scroll'
   import {mapState} from 'vuex'
   import Star from '../../../components/Star/Star'
   import RatingFilter from '../../../components/RatingFilter/RatingFilter'
+
   export default {
+    data() {
+      return {
+        selectRateType: 2,  // 0代表推荐 1代表吐槽 2代表全部
+        onlyContent: false  // 是否只显示有text的内容
+      }
+    },
 
     mounted() {
-      this.$store.dispatch('getRatings')
+      this.$store.dispatch('getRatings', () => {
+        // 等页面数据更新之后，再来创建scroll对象
+        this.$nextTick(() => {
+          new BScroll('.ratings', {
+            click: true
+          })
+        })
+      })
     },
 
     computed: {
-      ...mapState(['ratings', 'info'])
+      ...mapState(['ratings', 'info']),
+      // 过滤后的评价列表
+      filterRatings() {
+      //  取出相关数据
+        const {ratings, selectRateType, onlyContent} = this
+      //  返回过滤后的数组
+        return ratings.filter(rating => {
+          const {rateType, text} = rating
+          // 看这两个过滤条件
+          /*
+          条件1：
+            selectRateType：0/1/2  2表示全部
+            rateType：0/1
+            selectRateType===2 || selectRateType===rateType
+           */
+          /*
+          条件2：
+            onlyContent：true/false
+            text：是否有值
+            ！onlyContent || text.length > 0 只显示有内容的评论
+           */
+          return (selectRateType === 2 || selectRateType === rateType) && (!onlyContent || text.length > 0)
+        })
+      }
+    },
+
+    methods: {
+      // 设置selectRateType的值
+      setSelectRateType(selectRateType) {
+        this.selectRateType = selectRateType
+      },
+      switchOnlyContent() {
+        this.onlyContent = !this.onlyContent  // 取反即可
+      }
+    },
+
+    components: {
+      Star,
+      RatingFilter
     }
   }
 </script>
@@ -74,11 +133,12 @@
 
   .ratings
     position: absolute
-    top: 267px
+    top: 255px
     bottom: 0
     left: 0
     width: 100%
     overflow: hidden
+    background-color: #fff
     .overview
       display: flex
       padding: 18px 0

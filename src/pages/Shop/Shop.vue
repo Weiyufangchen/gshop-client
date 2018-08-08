@@ -50,6 +50,16 @@ replace属性：
       color rgb(77, 85, 93)
       a
         display block
+        position: relative;
         &.router-link-active
           color #02a774
+          &::after
+            content: ''
+            position absolute
+            left: 50%
+            bottom: 1px
+            width: 35px
+            height: 2px
+            transform translateX(-50%)
+            background #02a774
 </style>
