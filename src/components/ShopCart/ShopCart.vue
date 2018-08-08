@@ -102,7 +102,6 @@
             } else {
               this.scroll.refresh()  // 新的food添加，需要通知scroll去刷新，重新进行计算
             }
-
           })
         }
       //  如果数量大于0，看isShow即可

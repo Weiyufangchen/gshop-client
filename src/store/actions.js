@@ -70,11 +70,12 @@ export default {
     }
   },
 //  异步获取商家信息info
-  async getInfo ({commit}) {
+  async getInfo ({commit}, cb) {
     const result = await reqInfo()
     if (result.code === 0) {
       const info = result.data
       commit(RECEIVE_INFO, {info})
+      cb && cb()
     }
   },
 //  异步获取商家评分
